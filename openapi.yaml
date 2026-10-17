@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Product Management API
+  description: Kontrak API modern berbasis OpenAPI 3.0 untuk pengelolaan data produk.
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Server Sandbox Praktikum
+
+paths:
+  /products:
+    get:
+      summary: Mengambil seluruh daftar produk
+      operationId: getProducts
+      responses:
+        '200':
+          description: Daftar produk berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      summary: Menambahkan produk baru
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '201':
+          description: Produk berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Format data request tidak valid
+
+  /products/{id}:
+    get:
+      summary: Mengambil detail produk berdasarkan ID
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID unik produk
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail produk ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Produk tidak ditemukan
+
+    delete:
+      summary: Menghapus produk berdasarkan ID
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID unik produk
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Produk berhasil dihapus
+        '404':
+          description: Produk tidak ditemukan
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Kopi Susu Gula Aren"
+        price:
+          type: number
+          example: 18000
+        stock:
+          type: integer
+          example: 50
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-03-20T10:00:00Z"
+      required:
+        - id
+        - name
+        - price
+        - stock
+
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Kopi Susu Gula Aren"
+        price:
+          type: number
+          example: 18000
+        stock:
+          type: integer
+          example: 50
+      required:
+        - name
+        - price
+        - stock
